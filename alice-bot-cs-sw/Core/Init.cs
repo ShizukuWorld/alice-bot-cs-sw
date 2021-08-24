@@ -64,7 +64,7 @@ namespace alice_bot_cs_sw.Core
 
                 var config = new CoreConfig
                 {
-                    account = "2984530578",
+                    account = "3410869782",
                     ip = "127.0.0.1",
                     port = "8080",
                     authkey = "1145141919810",
