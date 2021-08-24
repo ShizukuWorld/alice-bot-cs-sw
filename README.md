@@ -1,6 +1,7 @@
 # alice-bot-cs-sw
 一个基于Mirai与MiraiCS与MiraiHttp的QQ机器人，雫世界构建 / A QQ Bot Named Alice Running with Mirai, ShizukuWorld Edition
-[社区项目](https://github.com/MeowCatZ/alice-bot-cs-ce)
+
+[旧社区项目](https://github.com/MeowCatZ/alice-bot-cs-ce)
 
 ## 概述
 - `AliceBot`是继`Urara`后由很菜很菜的`MashiroSA`发起的一个自研QQ机器人项目，使用`c#`编写，基于`Mirai(Mirai Core、Mirai Console、Mirai Http、Mirai CSharp)`。该版本为ShizukuWorld发行版
