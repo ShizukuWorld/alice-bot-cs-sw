@@ -1,5 +1,5 @@
-﻿using esubot.Core;
-using esubot.Message;
+﻿using alice_bot_cs_sw.Core;
+using alice_bot_cs_sw.Plugins;
 using Mirai_CSharp;
 using Mirai_CSharp.Models;
 using System;

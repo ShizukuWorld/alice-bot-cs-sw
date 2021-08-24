@@ -8,12 +8,13 @@ namespace alice_bot_cs_sw.Core
     public class Init
     {
         /// <summary>
-        /// 初始化类方法，将在类实例化后被执行。
+        /// 初始化类方法，将在类实例化后被执行。实例化方法将在机器人初始化时被执行，请将需要注册的插件方法于此执行。
         /// </summary>
         public Init()
         {
             InitDirectory();
             InitCoreConfig();
+            InitBotDatabase();
         }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace alice_bot_cs_sw.Core
             string currPath = AppDomain.CurrentDomain.BaseDirectory;
             string configPath = currPath + @"/config/";
             string dataPath = currPath + @"/data/";
-            //string databasePath = currPath + @"/database/";
+            string databasePath = currPath + @"/database/";
 
             //检测路径是否存在，不存在则创建。
             if (false == System.IO.Directory.Exists(configPath))
@@ -37,10 +38,10 @@ namespace alice_bot_cs_sw.Core
             {
                 System.IO.Directory.CreateDirectory(dataPath);
             }
-            //if (false == System.IO.Directory.Exists(databasePath))
-            //{
-            //    System.IO.Directory.CreateDirectory(databasePath);
-            //}
+            if (false == System.IO.Directory.Exists(databasePath))
+            {
+                System.IO.Directory.CreateDirectory(databasePath);
+            }
 
             //输出执行情况。
             Log.LogOut("", "初始化:数据文件夹:执行成功");
@@ -76,9 +77,22 @@ namespace alice_bot_cs_sw.Core
                 StreamWriter swc = new StreamWriter(fsc);
                 swc.Write(yaml);
                 swc.Close();
+
                 Log.LogOut("", "初始化:InitCoreConfig:执行成功");
 
             }
+            return 0;
+        }
+
+        /// <summary>
+        /// 初始化数据库参数。
+        /// </summary>
+        /// <returns>执行情况</returns>
+        private int InitBotDatabase()
+        {
+            Database.CreateNewSQLiteDatabase();
+
+            Log.LogOut("", "初始化:数据库检查已完成");
             return 0;
         }
     }

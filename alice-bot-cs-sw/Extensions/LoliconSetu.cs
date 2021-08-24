@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using alice_bot_cs_sw.Core;
+using alice_bot_cs_sw.Tools;
 using Newtonsoft.Json;
 
 namespace alice_bot_cs_sw.Extensions
@@ -13,6 +15,7 @@ namespace alice_bot_cs_sw.Extensions
         int _uid = 0;
         string _title = "";
         string _author = "";
+        string _ext = "";
         string _originalUrl = "";
         string _regularUrl = "";
         bool _r18 = false;
@@ -34,10 +37,13 @@ namespace alice_bot_cs_sw.Extensions
         {
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=0", "");
             ParseSetu(setuJson); // 分析色图。
-            DownloadSetu(); // 下载色图。
+            int flag = DownloadSetu(); // 下载色图。
             Log.LogOut("", $"色图功能:色图功能调用-无r18:{_regularUrl}");
+            if (flag == 1)
+            {
+                return null;
+            }
             return _setuFile;
-
         }
 
         /// <summary>
@@ -48,8 +54,25 @@ namespace alice_bot_cs_sw.Extensions
         {
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=1", "");
             ParseSetu(setuJson); // 分析色图。
-            DownloadSetu(); // 下载色图。
+            int flag = DownloadSetu(); // 下载色图。
             Log.LogOut("", $"色图功能:色图功能调用-有r18:{_regularUrl}");
+            if(flag == 1)
+            {
+                return null;
+            }
+            return _setuFile;
+        }
+
+        public string GetSetuTag(string tagName)
+        {
+            string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=0&tag={tagName}", "");
+            ParseSetu(setuJson); // 分析色图。
+            int flag = DownloadSetu(); // 下载色图。
+            Log.LogOut("", $"色图功能:色图功能调用-有r18:{_regularUrl}");
+            if (flag == 1 || _pid == 0)
+            {
+                return null;
+            }
             return _setuFile;
         }
 
@@ -62,6 +85,8 @@ namespace alice_bot_cs_sw.Extensions
             LoliconJson result = JsonConvert.DeserializeObject<LoliconJson>(setuJson);
             _regularUrl = result.data[0].urls.regular;
             _pid = result.data[0].pid;
+            _ext = result.data[0].ext;
+            
             return 0;
         }
 
@@ -71,17 +96,21 @@ namespace alice_bot_cs_sw.Extensions
         /// <returns>该方法的执行情况</returns>
         private int DownloadSetu()
         {
-            if (_originalUrl.Contains("jpg"))
+            if (_ext.Contains("jpg"))
             {
                 _setuFile = Path.Combine(_setuData, _pid + ".jpg");
             }
-            else if (_originalUrl.Contains("png"))
+            else if (_ext.Contains("png"))
             {
                 _setuFile = Path.Combine(_setuData, _pid + ".png");
             }
+            else if (_ext.Contains("jpeg"))
+            {
+                _setuFile = Path.Combine(_setuData, _pid + ".jpeg"); // 感觉这样不太好？
+            }
             else
             {
-                _setuFile = Path.Combine(_setuData, _pid + ".jpg"); // 感觉这样不太好？
+                return 1;
             }
 
             byte[] pic = HttpTool.GetBytesFromUrl(this._regularUrl);
