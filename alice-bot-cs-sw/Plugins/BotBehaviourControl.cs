@@ -33,13 +33,13 @@ namespace alice_bot_cs_sw.Plugins
         public BotBehaviourControl(long botqq)
         {
             this._botqq = botqq;
-            InitBotBehaviourControlConfig();
+            CreateBotBehaviourControlConfig();
         }
 
         /// <summary>
         /// 初始化本插件所需要的config
         /// </summary>
-        private static void InitBotBehaviourControlConfig()
+        private static void CreateBotBehaviourControlConfig()
         {
             string configPath = AppDomain.CurrentDomain.BaseDirectory + @"/config/";
             string configFilePath = configPath + @"BotBehaviourConfig.yaml";
