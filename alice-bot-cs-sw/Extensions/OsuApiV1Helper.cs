@@ -12,7 +12,7 @@ namespace alice_bot_cs_sw.Extensions
     public class OsuApiV1Helper
     {
         string _apikey = ""; // osu v1 api
-        string _testapikey = "";
+        string _testapikey = ""; // 测试用api
 
         /// <summary>
         /// 构造方法

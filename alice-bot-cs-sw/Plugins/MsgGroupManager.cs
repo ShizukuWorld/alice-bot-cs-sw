@@ -152,6 +152,30 @@ namespace alice_bot_cs_sw.Plugins
                 }
             }
 
+            // 寻找随机猫猫
+            if (str.Equals("随机猫猫") || str.Equals(".cat"))
+            {
+                reply = "正在搜寻猫猫哦！\n若长时间未返回内容，则可能猫猫走丢了....";
+                plain = new PlainMessage(reply);
+                await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+
+                RandomCat randomCat = new RandomCat();
+                string path = randomCat.GetCat();
+
+                if (path.Length == 0)
+                {
+                    reply = "寻找猫猫途中发生了未知错误！";
+                    plain = new PlainMessage(reply);
+                    await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                    return false;
+                }
+
+                reply = "已获取到猫猫！正在尝试推送中！\n该功能因为原服务器太远而经常丢失...";
+                plain = new PlainMessage(reply);
+                await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                await SendPictureAsync(session, path, e.Sender.Group.Id);
+            }
+
             return false; // 消息阻隔
         }
 
