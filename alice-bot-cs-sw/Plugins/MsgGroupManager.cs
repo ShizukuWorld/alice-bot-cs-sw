@@ -33,16 +33,16 @@ namespace alice_bot_cs_sw.Plugins
             Database.CreateNewSQLiteGroupInfo(e.Sender.Group.Id);
 
             //消息分割
-            string str = string.Join(null, (IEnumerable<IMessageBase>)e.Chain); // 取消息
-            string[] strArray = str.Split(new char[2] { '[', ']' }); // 分割Mirai码部分
-            str = strArray[2];
+            string strMirai = string.Join(null, (IEnumerable<IMessageBase>)e.Chain); // 取消息
+            string[] strArray = strMirai.Split(new char[2] { '[', ']' }); // 分割Mirai码部分
+            string str = strArray[2];
 
             //回复准备
             string reply = "";
             IMessageBase plain = new PlainMessage(reply);
 
             //Log记录
-            string msg = $"消息:来自群{e.Sender.Group.Id}:{str}";
+            string msg = $"消息:来自群{e.Sender.Group.Id}:{strMirai}";
             Log.LogOut("", msg);
 
             //色图扩展
@@ -129,6 +129,26 @@ namespace alice_bot_cs_sw.Plugins
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                         return false;
                     }
+                }
+            }
+
+            // osu信息查询
+            if (str.Contains("osu查询 ") || str.Contains(".osupf "))
+            {
+                str.Split(' ');
+                string target = str.Substring((str.IndexOf(" ")), (str.Length - str.IndexOf(" ")));
+                target = target.Replace(" ", "");
+                if (target.Length > 0)
+                {
+                    reply = "正在查询中！\n若长时间未返回内容，则可能指定用户不存在..";
+                    plain = new PlainMessage(reply);
+                    await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+
+                    OsuApiV1Helper osuApiV1Helper = new OsuApiV1Helper();
+
+                    reply = osuApiV1Helper.OsuGetUserInfo(target);
+                    plain = new PlainMessage(reply);
+                    await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                 }
             }
 

@@ -12,6 +12,7 @@ namespace alice_bot_cs_sw.Extensions
     public class OsuApiV1Helper
     {
         string _apikey = ""; // osu v1 api
+        string _testapikey = "";
 
         /// <summary>
         /// 构造方法
@@ -25,7 +26,7 @@ namespace alice_bot_cs_sw.Extensions
         /// <summary>
         /// 创建config
         /// </summary>
-        private static void CreateOsuApiV1HelperConfig()
+        private void CreateOsuApiV1HelperConfig()
         {
             string configPath = AppDomain.CurrentDomain.BaseDirectory + @"/config/";
             string configFilePath = configPath + @"OsuApiV1HelperConfig.yaml";
@@ -52,6 +53,9 @@ namespace alice_bot_cs_sw.Extensions
             }
         }
 
+        /// <summary>
+        /// 读取API信息
+        /// </summary>
         private void ReadOsuApiV1HelperConfig()
         {
             var deserializer = new DeserializerBuilder().WithNamingConvention(UnderscoredNamingConvention.Instance).Build();
@@ -61,6 +65,13 @@ namespace alice_bot_cs_sw.Extensions
             _apikey = sb.apikey;
 
             Log.LogOut("", "OSU查询:读取API(V1)已完成");
+        }
+
+        private int OsuUserInDatabaseChecker(string username)
+        {
+            int flag = 0;
+            // todo:加个处理方法，来分析空格用户id的注册,%20
+            return flag;
         }
 
         /// <summary>
@@ -75,21 +86,32 @@ namespace alice_bot_cs_sw.Extensions
             return userBP;
         }
 
+        /// <summary>
+        /// 查询OSU用户信息
+        /// </summary>
+        /// <param name="username">用户的id</param>
+        /// <returns>需要发送的信息</returns>
         public string OsuGetUserInfo(string username)
         {
             string userInfo = null;
-            string data = HttpTool.Get($"https://osu.ppy.sh/api/get_user?k={_apikey}&u={username}","");
+            string data = HttpTool.Get($"https://osu.ppy.sh/api/get_user?k={_testapikey}&u={username}",""); // test purpose todo:remove test api
+
+            data = data.Remove(data.Length - 1, 1);
+            data = data.Substring(1, data.Length - 1); // 笑死，根本不会写。什么爆改json
+
+            Log.LogOut("", data);
 
             OsuGetUserInfoJson result = JsonConvert.DeserializeObject<OsuGetUserInfoJson>(data);
-            if(result.osuGetUserInfoJsonData.user_id.Length > 0)
+
+            if (result.user_id.Length > 0)
             {
                 userInfo = $"已获取到用户{username}信息:\n" +
-                $"用户id:{result.osuGetUserInfoJsonData.user_id}\n" +
-                $"用户加入日期:{result.osuGetUserInfoJsonData.join_date}\n" +
-                $"排位得分RS:{result.osuGetUserInfoJsonData.ranked_score}\n" +
-                $""; // todo:没有写完的回答，还需要添加数据库查找功能@mashirosa
+                $"- 用户id:{result.user_id}\n" +
+                $"- 用户加入日期:{result.join_date}\n" +
+                $"- 排位得分RS:{result.ranked_score}\n" +
+                $"- 总得分TS:{result.total_score}\n" +
+                $"- 精准度ACC:{result.accuracy}";
             }
-            
             return userInfo;
         }
     }
@@ -99,12 +121,12 @@ namespace alice_bot_cs_sw.Extensions
         public string apikey { get; set; }
     }
 
-    public class OsuGetUserInfoJson
-    {
-        public OsuGetUserInfoJsonData osuGetUserInfoJsonData { get; set; }
-    }
+    //public class OsuGetUserInfoJson
+    //{
+    //    public OsuGetUserInfoJsonData osuGetUserInfoJsonData { get; set; }
+    //}
 
-    public class OsuGetUserInfoJsonData
+    public class OsuGetUserInfoJson
     {
         public string user_id { get; set; }
         public string username { get; set; }
