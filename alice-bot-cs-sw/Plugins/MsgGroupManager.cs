@@ -66,6 +66,7 @@ namespace alice_bot_cs_sw.Plugins
                             reply = "色图插件出现解析问题，本次请求被取消";
                             plain = new PlainMessage(reply);
                             await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                            
                             return false;
                         }
 
@@ -73,6 +74,8 @@ namespace alice_bot_cs_sw.Plugins
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                         await SendPictureAsync(session, path, e.Sender.Group.Id);
+
+                        return false;
                     }
                 }
                 if (str.Equals("色图来") || str.Equals("随机色图") || str.Equals(".setu"))
@@ -91,6 +94,7 @@ namespace alice_bot_cs_sw.Plugins
                             reply = "色图插件出现解析问题，本次请求被取消";
                             plain = new PlainMessage(reply);
                             await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                            
                             return false;
                         }
 
@@ -98,6 +102,7 @@ namespace alice_bot_cs_sw.Plugins
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                         await SendPictureAsync(session, path, e.Sender.Group.Id);
+                        
                         return false;
                     }
                     else if(setuset == 2)
@@ -113,6 +118,7 @@ namespace alice_bot_cs_sw.Plugins
                             reply = "色图插件出现解析问题，本次请求被取消";
                             plain = new PlainMessage(reply);
                             await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                            
                             return false;
                         }
 
@@ -120,6 +126,7 @@ namespace alice_bot_cs_sw.Plugins
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                         await SendPictureAsync(session, path, e.Sender.Group.Id);
+                        
                         return false;
                     }
                     else
@@ -127,9 +134,12 @@ namespace alice_bot_cs_sw.Plugins
                         reply = "数据库中本群权限组不正确";
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                        
                         return false;
                     }
                 }
+
+                return false;
             }
 
             // osu信息查询
@@ -150,6 +160,8 @@ namespace alice_bot_cs_sw.Plugins
                     plain = new PlainMessage(reply);
                     await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                 }
+
+                return false;
             }
 
             // 寻找随机猫猫
@@ -174,6 +186,8 @@ namespace alice_bot_cs_sw.Plugins
                 plain = new PlainMessage(reply);
                 await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                 await SendPictureAsync(session, path, e.Sender.Group.Id);
+
+                return false;
             }
 
             return false; // 消息阻隔
