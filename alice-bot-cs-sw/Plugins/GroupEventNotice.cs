@@ -68,11 +68,11 @@ namespace alice_bot_cs_sw.Plugins
 
             if (e.Current.ToString().Contains("A"))
             {
-                plainAttention = new PlainMessage($"实在是太可恶了！{e.Member.Name}，@{e.Member.Id}，成为了狗管理！！");
+                plainAttention = new PlainMessage($"实在是太可恶了！{e.Member.Name}，@{e.Member.Id}，成为了管理！！");
             }
             else if (e.Current.ToString().Contains("M"))
             {
-                plainAttention = new PlainMessage($"好耶！{e.Member.Name}，@{e.Member.Id}，被解雇狗管理了！");
+                plainAttention = new PlainMessage($"好耶！{e.Member.Name}，@{e.Member.Id}，被解雇管理了！");
             }
             else
             {
