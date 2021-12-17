@@ -48,9 +48,11 @@ namespace alice_bot_cs_sw
              */
             GroupEventNotice groupEventNotice = new GroupEventNotice();
             MsgGroupManager msgGroupManager = new MsgGroupManager();
-
+            MsgPrivateManager msgPrivateManager = new MsgPrivateManager();
+            
             session.AddPlugin(groupEventNotice);
             session.AddPlugin(msgGroupManager);
+            session.AddPlugin(msgPrivateManager);
 
             Log.LogOut("", "入口点:初始化Message处理完成");
 
