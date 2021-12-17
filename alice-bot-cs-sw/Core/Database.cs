@@ -11,9 +11,9 @@ namespace alice_bot_cs_sw.Core
     public class Database
     {
         //public static string db = AppDomain.CurrentDomain.BaseDirectory + @"/database/Bot.db";
-        public static string dbPath = AppDomain.CurrentDomain.BaseDirectory + @"/database/";
-        public static string dbFilePath = dbPath + @"Bot.db";
-        public static SQLiteConnection SqliteConnection = new SQLiteConnection("data source=" + dbFilePath);
+        public static string DbPath = AppDomain.CurrentDomain.BaseDirectory + @"/database/";
+        public static string DbFilePath = DbPath + @"Bot.db";
+        public static SQLiteConnection SqliteConnection = new SQLiteConnection("data source=" + DbFilePath);
 
         /// <summary>
         /// 构造方法。
@@ -25,11 +25,11 @@ namespace alice_bot_cs_sw.Core
         /// <summary>
         /// 创建一个新的机器人使用的SQLite数据库
         /// </summary>
-        public static void CreateNewSQLiteDatabase()
+        public static void CreateNewSqLiteDatabase()
         {
-            if (false == System.IO.File.Exists(dbFilePath))
+            if (false == System.IO.File.Exists(DbFilePath))
             {
-                FileStream fs = new FileStream(dbFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                FileStream fs = new FileStream(DbFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Close();
 
@@ -62,11 +62,11 @@ namespace alice_bot_cs_sw.Core
         /// <param name="tableName">目标数据表名</param>
         /// <param name="columnName">列名</param>
         /// <param name="columnClass">列类型</param>
-        public static void CreateNewSQLiteColumn(string tableName, string columnName, string columnClass)
+        public static void CreateNewSqLiteColumn(string tableName, string columnName, string columnClass)
         {
-            if (false == System.IO.File.Exists(dbFilePath)) // 初始化鉴别
+            if (false == System.IO.File.Exists(DbFilePath)) // 初始化鉴别
             {
-                FileStream fs = new FileStream(dbFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                FileStream fs = new FileStream(DbFilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Close();
 
@@ -89,8 +89,7 @@ namespace alice_bot_cs_sw.Core
         /// 在SQLite中User新增一个新的用户记录
         /// </summary>
         /// <param name="qqNumber">用户的QQ号</param>
-        /// <returns></returns>
-        public static void CreateNewSQLiteUserInfo(long qqNumber)
+        public static void CreateNewSqLiteUserInfo(long qqNumber)
         {
             SqliteConnection.Open();
             SQLiteCommand cmd = new SQLiteCommand();
@@ -98,31 +97,31 @@ namespace alice_bot_cs_sw.Core
 
             int totalRow = 0;
             cmd.CommandText = "SELECT count(*) FROM qquser";
-            SQLiteDataReader sr1 = cmd.ExecuteReader(CommandBehavior.SingleRow);
-            if (sr1.Read())
+            SQLiteDataReader srTotal = cmd.ExecuteReader(CommandBehavior.SingleRow);
+            if (srTotal.Read())
             {
-                totalRow = sr1.GetInt32(0);
+                totalRow = srTotal.GetInt32(0);
             }
             else
             {
                 totalRow += 1;
             }
-            sr1.Close();
+            srTotal.Close();
             cmd.ExecuteNonQueryAsync();
 
 
             cmd.CommandText = $"SELECT * FROM qquser WHERE qqnumber IS {qqNumber};";
 
 
-            SQLiteDataReader sr2 = cmd.ExecuteReader(CommandBehavior.SingleRow);
+            SQLiteDataReader srDetail = cmd.ExecuteReader(CommandBehavior.SingleRow);
 
-            if (sr2.HasRows)
+            if (srDetail.HasRows)
             {
-                sr2.Close();
+                srDetail.Close();
             }
             else
             {
-                sr2.Close();
+                srDetail.Close();
                 Log.LogOut("", $"数据库:发现新用户:{qqNumber},正在注册到数据库");
                 cmd.CommandText = "INSERT INTO " + "qquser" + " " +
                                   $"VALUES ('{totalRow}', '{qqNumber}', 1, null, null, null, null)";
@@ -137,8 +136,7 @@ namespace alice_bot_cs_sw.Core
         /// 在SQLite中User新增一个新的QQ群记录
         /// </summary>
         /// <param name="qgNumber">QQ群的群号</param>
-        /// <returns></returns>
-        public static void CreateNewSQLiteGroupInfo(long qgNumber)
+        public static void CreateNewSqLiteGroupInfo(long qgNumber)
         {
             SqliteConnection.Open();
             SQLiteCommand cmd = new SQLiteCommand();
@@ -146,31 +144,31 @@ namespace alice_bot_cs_sw.Core
 
             int totalRow = 0;
             cmd.CommandText = "SELECT count(*) FROM qqgroup";
-            SQLiteDataReader sr1 = cmd.ExecuteReader(CommandBehavior.SingleRow);
-            if (sr1.Read())
+            SQLiteDataReader srTotal = cmd.ExecuteReader(CommandBehavior.SingleRow);
+            if (srTotal.Read())
             {
-                totalRow = sr1.GetInt32(0);
+                totalRow = srTotal.GetInt32(0);
             }
             else
             {
                 totalRow += 1;
             }
-            sr1.Close();
+            srTotal.Close();
             cmd.ExecuteNonQueryAsync();
 
 
             cmd.CommandText = $"SELECT * FROM qqgroup WHERE qgnumber IS {qgNumber};";
 
 
-            SQLiteDataReader sr2 = cmd.ExecuteReader(CommandBehavior.SingleRow);
+            SQLiteDataReader srDetail = cmd.ExecuteReader(CommandBehavior.SingleRow);
 
-            if (sr2.HasRows)
+            if (srDetail.HasRows)
             {
-                sr2.Close();
+                srDetail.Close();
             }
             else
             {
-                sr2.Close();
+                srDetail.Close();
                 Log.LogOut("", $"数据库:发现新群组:{qgNumber},正在注册到数据库");
                 cmd.CommandText = "INSERT INTO " + "qqgroup" + " " +
                                   $"VALUES ('{totalRow}', '{qgNumber}', 1, 1)";
@@ -186,7 +184,7 @@ namespace alice_bot_cs_sw.Core
         /// </summary>
         /// <param name="qqNumber">查询对象的QQ号</param>
         /// <returns>对应对象的权限组</returns>
-        public static int CheckSQLiteUserPermission(long qqNumber)
+        public static int CheckSqLiteUserPermission(long qqNumber)
         {
             int permission = 0;
 
@@ -204,7 +202,12 @@ namespace alice_bot_cs_sw.Core
             return permission;
         }
 
-        public static int CheckSQLiteGroupSetuset(long qgNumber)
+        /// <summary>
+        /// 查询某群的权限组
+        /// </summary>
+        /// <param name="qgNumber">查询对象群的群号</param>
+        /// <returns>对应对象的权限组</returns>
+        public static int CheckSqLiteGroupSetuset(long qgNumber)
         {
             int setuset = 0;
 
@@ -220,6 +223,100 @@ namespace alice_bot_cs_sw.Core
             }
             SqliteConnection.Close();
             return setuset;
+        }
+        
+
+        /// <summary>
+        /// 直接执行一个数据库命令操作，且不返回数据
+        /// </summary>
+        /// <param name="qqNumber">操作人的qq</param>
+        /// <param name="command"></param>
+        public static void SqLiteCommandExecute(long qqNumber, string command)
+        {
+            if (CheckSqLiteUserPermission(qqNumber) == 3)
+            {
+                SqliteConnection.Open();
+
+                SQLiteCommand cmd = new SQLiteCommand();
+                cmd.Connection = SqliteConnection;
+
+                Log.LogOut("", $"数据库:{qqNumber}正在通过远程执行数据库操作");
+                cmd.CommandText = command;
+                cmd.ExecuteNonQueryAsync();
+
+                SqliteConnection.Close();
+            }
+        }
+
+        /// <summary>
+        /// 直接执行数据库的查询
+        /// </summary>
+        /// <param name="qqNumber">操作人的QQ</param>
+        /// <param name="command">命令</param>
+        /// <returns>查询结果</returns>
+        public static string SqLiteCommandReader(long qqNumber, string command)
+        {
+            string result = null;
+            if (CheckSqLiteUserPermission(qqNumber) == 3)
+            {
+                SqliteConnection.Open();
+
+                SQLiteCommand cmd = new SQLiteCommand();
+                cmd.Connection = SqliteConnection;
+
+                Log.LogOut("", $"数据库:{qqNumber}正在通过远程执行数据库查询");
+                cmd.CommandText = command;
+                SQLiteDataReader sr = cmd.ExecuteReader(); // 读取结果集
+                result = sr.ToString();
+                cmd.ExecuteNonQueryAsync();
+                
+                SqliteConnection.Close();
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// 更改某个人或者某个群的权限
+        /// </summary>
+        /// <param name="qqNumber">操作人的QQ</param>
+        /// <param name="type">是用户还是群聊</param>
+        /// <param name="target">目标</param>
+        /// <param name="permission">权限</param>
+        public static void ChangeSqLiteQqQgPermission(long qqNumber, int type, string target, string permission)
+        {
+            SqliteConnection.Open();
+
+            SQLiteCommand cmd = new SQLiteCommand();
+            cmd.Connection = SqliteConnection;
+            if (type == 1)
+            {
+                Log.LogOut("", $"数据库:{qqNumber}执行了对用户{target}的权限更改->{permission}");
+                cmd.CommandText = $"UPDATE qquser SET permission = {permission} WHERE qqnumber = {target}";
+            }else if (type == 2)
+            {
+                Log.LogOut("", $"数据库:{qqNumber}执行了对群聊{target}的权限更改->{permission}");
+                cmd.CommandText = $"UPDATE qqgroup SET permission = {permission} WHERE qgnumber = {target}";
+            }
+
+            cmd.ExecuteNonQueryAsync();
+
+            SqliteConnection.Close();
+        }
+        
+        public static void ChangeSqLiteQgSetuSet(long qqNumber, string target, string setuset)
+        {
+            SqliteConnection.Open();
+
+            SQLiteCommand cmd = new SQLiteCommand();
+            cmd.Connection = SqliteConnection;
+
+            Log.LogOut("", $"数据库:{qqNumber}执行了对群聊{target}的色图功能权限更改->{setuset}");
+            cmd.CommandText = $"UPDATE qqgroup SET setuset = {setuset} WHERE qgnumber = {target}";
+
+            cmd.ExecuteNonQueryAsync();
+
+            SqliteConnection.Close();
         }
     }
 }
