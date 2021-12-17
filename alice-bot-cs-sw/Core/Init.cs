@@ -90,7 +90,7 @@ namespace alice_bot_cs_sw.Core
         /// <returns>执行情况</returns>
         private int InitBotDatabase()
         {
-            Database.CreateNewSQLiteDatabase();
+            Database.CreateNewSqLiteDatabase();
 
             Log.LogOut("", "初始化:数据库检查已完成");
             return 0;
