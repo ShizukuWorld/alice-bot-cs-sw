@@ -38,7 +38,7 @@ namespace alice_bot_cs_sw.Extensions
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=0", "");
             ParseSetu(setuJson); // 分析色图。
             int flag = DownloadSetu(); // 下载色图。
-            Log.LogOut("", $"色图功能:色图功能调用-无r18:{_regularUrl}");
+            Log.LogOut("", $"色图功能:色图功能调用-N");
             if (flag == 1)
             {
                 return null;
@@ -55,7 +55,7 @@ namespace alice_bot_cs_sw.Extensions
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=1", "");
             ParseSetu(setuJson); // 分析色图。
             int flag = DownloadSetu(); // 下载色图。
-            Log.LogOut("", $"色图功能:色图功能调用-有r18:{_regularUrl}");
+            Log.LogOut("", $"色图功能:色图功能调用-R18");
             if(flag == 1)
             {
                 return null;
@@ -68,7 +68,7 @@ namespace alice_bot_cs_sw.Extensions
             string setuJson = HttpTool.Get($"https://api.lolicon.app/setu/v2/?size=regular&r18=0&tag={tagName}", "");
             ParseSetu(setuJson); // 分析色图。
             int flag = DownloadSetu(); // 下载色图。
-            Log.LogOut("", $"色图功能:色图功能调用-有r18:{_regularUrl}");
+            Log.LogOut("", $"色图功能:色图功能调用-Tag");
             if (flag == 1 || _pid == 0)
             {
                 return null;

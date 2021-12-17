@@ -115,7 +115,6 @@ namespace alice_bot_cs_sw.Plugins
                     reply = "正在搜寻指定色图！\n若长时间未返回内容，则可能指定关键词不存在..";
                     plain = new PlainMessage(reply);
                     await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
-
                     LoliconSetu loliconSetu = new LoliconSetu();
                     string path = loliconSetu.GetSetuTag(tag);
                     if (path.Length == 0)
@@ -123,6 +122,7 @@ namespace alice_bot_cs_sw.Plugins
                         reply = "色图插件出现解析问题，本次请求被取消";
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+
                         return false;
                     }
 
@@ -141,10 +141,10 @@ namespace alice_bot_cs_sw.Plugins
                     reply = "正在获取色图！";
                     plain = new PlainMessage(reply);
                     await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
-
                     LoliconSetu loliconSetu = new LoliconSetu();
                     var path = loliconSetu.GetSetu();
                     if (path.Length == 0)
+
                     {
                         reply = "色图插件出现解析问题，本次请求被取消";
                         plain = new PlainMessage(reply);
@@ -171,9 +171,9 @@ namespace alice_bot_cs_sw.Plugins
                         reply = "色图插件出现解析问题，本次请求被取消";
                         plain = new PlainMessage(reply);
                         await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
+                        
                         return false;
                     }
-
                     reply = "已获取到色图！正在发送..";
                     plain = new PlainMessage(reply);
                     await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
@@ -187,7 +187,6 @@ namespace alice_bot_cs_sw.Plugins
                     await session.SendGroupMessageAsync(e.Sender.Group.Id, plain);
                     return false;
                 }
-
             }
             return false;
         }
