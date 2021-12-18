@@ -49,10 +49,14 @@ namespace alice_bot_cs_sw
             GroupEventNotice groupEventNotice = new GroupEventNotice();
             MsgGroupManager msgGroupManager = new MsgGroupManager();
             MsgPrivateManager msgPrivateManager = new MsgPrivateManager();
+            BotBehaviourControl botBehaviourControl = new BotBehaviourControl(qq);
+            ReconnectControl reconnectControl = new ReconnectControl(ip, port, authkey, qq);
             
             session.AddPlugin(groupEventNotice);
             session.AddPlugin(msgGroupManager);
             session.AddPlugin(msgPrivateManager);
+            session.AddPlugin(botBehaviourControl);
+            session.AddPlugin(reconnectControl);
 
             Log.LogOut("", "入口点:初始化Message处理完成");
 
