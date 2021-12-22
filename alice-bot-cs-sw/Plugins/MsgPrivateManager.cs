@@ -37,12 +37,9 @@ namespace alice_bot_cs_sw.Plugins
 
             //权限修改
             #region PermissionChanger
-            if(str.Contains("!cp")) await PermissionChanger(e.Sender.Id, str);
+            if(str.Contains("!cp")) await PermissionChanger(e.Sender.Id, str, session, e);
             #endregion
             
-            IMessageBase reply = new PlainMessage("");
-
-            await session.SendFriendMessageAsync(e.Sender.Id, reply);
             return false;
         }
 
@@ -67,7 +64,7 @@ namespace alice_bot_cs_sw.Plugins
         /// <param name="qqSender">消息发送者</param>
         /// <param name="str">消息内容</param>
         /// <returns>消息阻隔</returns>
-        private async Task<bool> PermissionChanger(long qqSender, string str)
+        private async Task<bool> PermissionChanger(long qqSender, string str, MiraiHttpSession session, IFriendMessageEventArgs e)
         {
             string type; // 需要更改的权限种类
             string target; // 目标
@@ -86,9 +83,13 @@ namespace alice_bot_cs_sw.Plugins
                 if (type.ToUpper().Contains("USER"))
                 {
                     Database.ChangeSqLiteQqQgPermission(qqSender, 1, target, permission);
+                    IMessageBase reply = new PlainMessage("对成员的权限修改已执行");
+                    await session.SendFriendMessageAsync(e.Sender.Id, reply);
                 }else if (type.ToUpper().Contains("GROUP"))
                 {
                     Database.ChangeSqLiteQqQgPermission(qqSender, 2, target, permission);
+                    IMessageBase reply = new PlainMessage("对群聊的权限修改已执行");
+                    await session.SendFriendMessageAsync(e.Sender.Id, reply);
                 }
             }
             return false;

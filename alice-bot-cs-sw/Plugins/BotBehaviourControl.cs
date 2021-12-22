@@ -172,7 +172,6 @@ namespace alice_bot_cs_sw.Plugins
         /// <returns>消息阻隔情况</returns>
         public async Task<bool> GroupMessage(MiraiHttpSession session, IGroupMessageEventArgs e)
         {
-            //
             string str = string.Join(null, (IEnumerable<IMessageBase>)e.Chain); // 取消息
             string[] strArray = str.Split(new char[2] { '[', ']' }); // 分割Mirai码部分
             str = strArray[2];
